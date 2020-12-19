@@ -10,14 +10,16 @@ def boas_vindas
 
     puts "Legal, " + user + "Vamos jogar um jogo."
     puts "\n\n\n"
-    user
-end
 
-def define_num
     puts "Eu vou escolher um número de 1 a 200 e você vai ter três chances de acertá-lo." 
     puts "Para cada chance que você errar, direi 'frio' se o número que escolhi for menor e 'quente' se for maior."
     puts "Que comecem os jogos..."
     puts "\n\n\n\n\n\n"
+
+    user
+end
+
+def define_num
     sorteado = 123
     sorteado
 end
@@ -58,11 +60,25 @@ def acertou?(tentativa,sorteado)
     false
 end
 
+def imprime_chutes(tentativa, chutes, pede_num)
+    chutes[tentativa - 1] = pede_num
+    
+    puts "Suas tentativas até agora"
+    puts "\n\n"    
+    
+    for contador in 0..(tentativa-1)
+        puts "Tentativa " + (contador+1).to_s + ": " + chutes[contador].to_s
+    end
+
+    puts "\n\n" 
+end
+
 boas_vindas
 limite_de_tentativas = 5
-define_num
+chutes = []
 
 for tentativa in 1..limite_de_tentativas 
-    pede_num tentativa, limite_de_tentativas 
-    break if acertou? define_num, tentativa
+    imprime_chutes(tentativa, chutes, pede_num(tentativa, limite_de_tentativas))
+    break if acertou?(define_num, tentativa)
 end
+
