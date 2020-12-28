@@ -20,7 +20,7 @@ def boas_vindas
 end
 
 def define_num
-    sorteado = 123
+    sorteado = rand(200)
     sorteado
 end
 
@@ -36,7 +36,7 @@ def pede_num(tentativa,limite_de_tentativas)
     tentativa.to_i
 end
 
-def acertou?(tentativa,sorteado) 
+def acertou?(tentativa, sorteado, user) 
     gabarito = tentativa == sorteado
     gabarito_maior = sorteado > tentativa
 
@@ -50,10 +50,10 @@ def acertou?(tentativa,sorteado)
     puts "Errou! Você tem mais uma chance"
 
     if gabarito_maior
-        puts "Tá frio!"
+        puts "Tá quente!"
         puts "\n\n\n"
     else
-        puts "Tá quente!"
+        puts "Tá frio!"
         puts "\n\n\n"
     end
 
@@ -67,18 +67,32 @@ def imprime_chutes(tentativa, chutes, pede_num)
     puts "\n\n"    
     
     for contador in 0..(tentativa-1)
-        puts "Tentativa " + (contador+1).to_s + ": " + chutes[contador].to_s
+        puts "Tentativa #{contador+1}: #{chutes[contador]}" # Outra forma de concatenar strings
     end
 
     puts "\n\n" 
 end
 
 boas_vindas
+pontos_iniciais = 1000
 limite_de_tentativas = 5
 chutes = []
 
 for tentativa in 1..limite_de_tentativas 
-    imprime_chutes(tentativa, chutes, pede_num(tentativa, limite_de_tentativas))
-    break if acertou?(define_num, tentativa)
+
+    chute = pede_num(tentativa, limite_de_tentativas)
+    imprime_chutes(tentativa, chutes, chute)
+
+    pontos_a_perder = (chute - define_num).abs/2.0
+    pontos_iniciais -= pontos_a_perder
+
+    puts "Você tem #{pontos_iniciais} pontos em saldo"
+
+    break if acertou?(chute, define_num, boas_vindas)
+
 end
 
+# Funções size, strip e escopo. Métodos.
+# irb serve para executar linhas isoladas no terminal
+# É possível listar os métodos possíveis de uma variável ao usar o comando .method
+#  pontos_a_perder *= -1 if pontos_a_perder < 0 
