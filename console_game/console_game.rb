@@ -11,16 +11,34 @@ def boas_vindas
     puts "Legal, " + user + "Vamos jogar um jogo."
     puts "\n\n\n"
 
-    puts "Eu vou escolher um número de 1 a 200 e você vai ter três chances de acertá-lo." 
+    user
+end
+
+def pede_dificuldade
+    puts "Qual o nível de dificuldade que deseja? (1 = fácil, 5 = difícil)"
+    dificuldade = gets.to_i
+end
+
+def define_num(dificuldade)
+    case dificuldade
+    when 1..3
+        maximo = 20 * dificuldade
+    when 4
+        maximo = 100
+    when 5
+        maximo = 200
+    else 
+        puts "Insira uma dificuldade válida!"
+        return
+    end
+
+    sorteado = rand(maximo) + 1
+
+    puts "Eu vou escolher um número de 1 a #{maximo - 1} e você vai ter três chances de acertá-lo." 
     puts "Para cada chance que você errar, direi 'frio' se o número que escolhi for menor e 'quente' se for maior."
     puts "Que comecem os jogos..."
     puts "\n\n\n\n\n\n"
 
-    user
-end
-
-def define_num
-    sorteado = rand(200)
     sorteado
 end
 
@@ -73,26 +91,40 @@ def imprime_chutes(tentativa, chutes, pede_num)
     puts "\n\n" 
 end
 
-boas_vindas
-pontos_iniciais = 1000
-limite_de_tentativas = 5
-chutes = []
+def jogar(user, dificuldade)
+    num_sorteado = define_num(dificuldade)
+    pontos_iniciais = 1000
+    limite_de_tentativas = 5
+    chutes = []
 
-for tentativa in 1..limite_de_tentativas 
+    for tentativa in 1..limite_de_tentativas 
 
-    chute = pede_num(tentativa, limite_de_tentativas)
-    imprime_chutes(tentativa, chutes, chute)
+        chute = pede_num(tentativa, limite_de_tentativas)
+        imprime_chutes(tentativa, chutes, chute)
 
-    pontos_a_perder = (chute - define_num).abs/2.0
-    pontos_iniciais -= pontos_a_perder
+        pontos_a_perder = (chute - num_sorteado).abs/2.0
+        pontos_iniciais -= pontos_a_perder
 
-    puts "Você tem #{pontos_iniciais} pontos em saldo"
+        puts "Você tem #{pontos_iniciais} pontos em saldo"
+        puts "\n\n"
 
-    break if acertou?(chute, define_num, boas_vindas)
+        break if acertou?(chute, num_sorteado, user)
 
+    end
 end
 
-# Funções size, strip e escopo. Métodos.
-# irb serve para executar linhas isoladas no terminal
-# É possível listar os métodos possíveis de uma variável ao usar o comando .method
-#  pontos_a_perder *= -1 if pontos_a_perder < 0 
+def quer_jogar
+    puts "Deseja hogar novamente? (S/N)"
+    quero_jogar = gets.strip
+    quero_jogar == "S"
+end
+
+user = boas_vindas
+dificuldade = pede_dificuldade
+
+loop do
+    jogar(user, dificuldade)
+    if !quer_jogar
+        break
+    end
+end
